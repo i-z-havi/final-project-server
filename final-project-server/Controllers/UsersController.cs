@@ -8,11 +8,11 @@ namespace final_project_server.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class UserController : ControllerBase
+	public class UsersController : ControllerBase
 	{
 		private UsersService _usersService;
 
-		public UserController(IMongoClient mongoClient)
+		public UsersController(IMongoClient mongoClient)
 		{
 			_usersService = new UsersService(mongoClient);
 		}
@@ -25,7 +25,7 @@ namespace final_project_server.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> Get([FromBody] string id)
+		public async Task<IActionResult> Get(string id)
 		{
 			User user = await _usersService.GetUserAsync(id);
 			return Ok(user);
@@ -45,6 +45,32 @@ namespace final_project_server.Controllers
 			}
 		}
 
+		[HttpPut("{id}")]
+		public async Task<IActionResult> Put(string id, [FromBody] User updatedUser)
+		{
+			try
+			{
+				await _usersService.EditUserAsync(id, updatedUser);
+			}
+			catch(Exception e)
+			{
+				return NotFound(e.Message);
+			}
+			return NoContent();
+		}
 
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> Delete(string id)
+		{
+			try
+			{
+				await _usersService.DeleteUserAsync(id);
+			}
+			catch(Exception e)
+			{
+				return NotFound(e.Message);
+			}
+			return NoContent();
+		}
 	}
 }

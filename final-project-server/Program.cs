@@ -1,3 +1,4 @@
+using final_project_server.Middleware;
 using final_project_server.Services.Data;
 
 namespace final_project_server
@@ -43,7 +44,7 @@ namespace final_project_server
 
             app.UseCors("myCorsPolicy");
             app.UseHttpsRedirection();
-
+            app.UseMiddleware<LoggerMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
 
