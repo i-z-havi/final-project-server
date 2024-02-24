@@ -5,7 +5,7 @@ using MongoDB.Driver;
 
 namespace final_project_server.Services.Users
 {
-    public class UsersService
+    public class UsersService : IUsersService
     {
         private IMongoCollection<User> _users;
 

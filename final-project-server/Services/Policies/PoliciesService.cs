@@ -2,23 +2,23 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace final_project_server.Services.Users
+namespace final_project_server.Services.Policies
 {
-    public class PoliciesService
+    public class PoliciesService : IPoliciesService
     {
-        public IMongoCollection<PoliticPolicy> _policies;
+        public IMongoCollection<Models.Politics.ProjectPolicy> _policies;
 
         public PoliciesService(IMongoClient mongoClient)
         {
             var dataBase = mongoClient.GetDatabase("policies_website");
-            _policies = dataBase.GetCollection<PoliticPolicy>("policies");
+            _policies = dataBase.GetCollection<Models.Politics.ProjectPolicy>("policies");
         }
 
         //create
-        public async Task<PoliticPolicy> CreatePolicyAsync(PoliticPolicy policy)
+        public async Task<Models.Politics.ProjectPolicy> CreatePolicyAsync(Models.Politics.ProjectPolicy policy)
         {
             var check = await _policies.Find(u => u.Title == policy.Title).FirstOrDefaultAsync();
-            if (check!= null)
+            if (check != null)
             {
                 throw new Exception("This policy already exists!");
             }
@@ -27,9 +27,9 @@ namespace final_project_server.Services.Users
         }
 
         //read one 
-        public async Task<PoliticPolicy> GetPolicyAsync(string id)
+        public async Task<Models.Politics.ProjectPolicy> GetPolicyAsync(string id)
         {
-            PoliticPolicy pol = await _policies.Find(p => p.Id.ToString() == id).FirstOrDefaultAsync();
+            Models.Politics.ProjectPolicy pol = await _policies.Find(p => p.Id.ToString() == id).FirstOrDefaultAsync();
             if (pol == null)
             {
                 throw new Exception("Policy not found!");
@@ -38,16 +38,16 @@ namespace final_project_server.Services.Users
         }
 
         //read all
-        public async Task<List<PoliticPolicy>> GetPoliciesAsync()
+        public async Task<List<Models.Politics.ProjectPolicy>> GetPoliciesAsync()
         {
             return await _policies.Find(_ => true).ToListAsync();
         }
 
         //update 
-        public async Task UpdatePolicyAsync(string id, PoliticPolicy updatedPol)
+        public async Task UpdatePolicyAsync(string id, Models.Politics.ProjectPolicy updatedPol)
         {
-            var filter = Builders<PoliticPolicy>.Filter.Eq(p => p.Id, new ObjectId(id));
-            var builder = Builders<PoliticPolicy>.Update
+            var filter = Builders<Models.Politics.ProjectPolicy>.Filter.Eq(p => p.Id, new ObjectId(id));
+            var builder = Builders<Policies>.Update
                 .Set(p => p.PoliticalLean, updatedPol.PoliticalLean)
                 .Set(p => p.Title, updatedPol.Title)
                 .Set(p => p.Subtitle, updatedPol.Subtitle)

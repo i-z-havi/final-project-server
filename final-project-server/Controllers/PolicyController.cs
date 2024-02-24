@@ -1,12 +1,12 @@
 ﻿using final_project_server.Models.Politics;
-using final_project_server.Services.Users;
+using final_project_server.Services.Policies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 
 namespace final_project_server.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class PolicyController : ControllerBase
 	{
@@ -20,14 +20,14 @@ namespace final_project_server.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetPolicies()
 		{
-			List<PoliticPolicy> policies = await _policiesService.GetPoliciesAsync();
+			List<ProjectPolicy> policies = await _policiesService.GetPoliciesAsync();
 			return Ok(policies);
 		}
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetPolicy(string id)
 		{
-			PoliticPolicy pol = await _policiesService.GetPolicyAsync(id);
+			ProjectPolicy pol = await _policiesService.GetPolicyAsync(id);
 			if (pol != null)
 			{
 				return Ok(pol);
@@ -36,19 +36,19 @@ namespace final_project_server.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreatePolicy([FromBody] PoliticPolicy policy)
+		public async Task<IActionResult> CreatePolicy([FromBody] ProjectPolicy policy)
 		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
 
-			PoliticPolicy pol = await _policiesService.CreatePolicyAsync(policy);
+			ProjectPolicy pol = await _policiesService.CreatePolicyAsync(policy);
 			return CreatedAtAction(nameof(GetPolicy), new { id = pol.Id }, pol);
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdatePolicy(string id, [FromBody] PoliticPolicy pol)
+		public async Task<IActionResult> UpdatePolicy(string id, [FromBody] ProjectPolicy pol)
 		{
             if (!ModelState.IsValid)
             {
