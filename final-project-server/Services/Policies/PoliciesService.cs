@@ -6,16 +6,16 @@ namespace final_project_server.Services.Policies
 {
     public class PoliciesService : IPoliciesService
     {
-        public IMongoCollection<Models.Politics.ProjectPolicy> _policies;
+        public IMongoCollection<ProjectPolicyMongo> _policies;
 
         public PoliciesService(IMongoClient mongoClient)
         {
             var dataBase = mongoClient.GetDatabase("policies_website");
-            _policies = dataBase.GetCollection<Models.Politics.ProjectPolicy>("policies");
+            _policies = dataBase.GetCollection<ProjectPolicyMongo>("policies");
         }
 
         //create
-        public async Task<Models.Politics.ProjectPolicy> CreatePolicyAsync(Models.Politics.ProjectPolicy policy)
+        public async Task<ProjectPolicyMongo> CreatePolicyAsync(ProjectPolicyMongo policy)
         {
             var check = await _policies.Find(u => u.Title == policy.Title).FirstOrDefaultAsync();
             if (check != null)
@@ -27,9 +27,9 @@ namespace final_project_server.Services.Policies
         }
 
         //read one 
-        public async Task<Models.Politics.ProjectPolicy> GetPolicyAsync(string id)
+        public async Task<ProjectPolicyMongo> GetPolicyAsync(string id)
         {
-            Models.Politics.ProjectPolicy pol = await _policies.Find(p => p.Id.ToString() == id).FirstOrDefaultAsync();
+            ProjectPolicyMongo pol = await _policies.Find(p => p.Id.ToString() == id).FirstOrDefaultAsync();
             if (pol == null)
             {
                 throw new Exception("Policy not found!");
@@ -38,17 +38,16 @@ namespace final_project_server.Services.Policies
         }
 
         //read all
-        public async Task<List<Models.Politics.ProjectPolicy>> GetPoliciesAsync()
+        public async Task<List<ProjectPolicyMongo>> GetPoliciesAsync()
         {
             return await _policies.Find(_ => true).ToListAsync();
         }
 
         //update 
-        public async Task UpdatePolicyAsync(string id, Models.Politics.ProjectPolicy updatedPol)
+        public async Task UpdatePolicyAsync(string id, ProjectPolicyMongo updatedPol)
         {
-            var filter = Builders<Models.Politics.ProjectPolicy>.Filter.Eq(p => p.Id, new ObjectId(id));
-            var builder = Builders<Policies>.Update
-                .Set(p => p.PoliticalLean, updatedPol.PoliticalLean)
+            var filter = Builders<ProjectPolicyMongo>.Filter.Eq(p => p.Id, new ObjectId(id));
+            var builder = Builders<ProjectPolicyMongo>.Update
                 .Set(p => p.Title, updatedPol.Title)
                 .Set(p => p.Subtitle, updatedPol.Subtitle)
                 .Set(p => p.Description, updatedPol.Description);

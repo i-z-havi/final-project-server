@@ -10,17 +10,17 @@ namespace final_project_server.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private UsersService _usersService;
+        private IUsersService _usersService;
 
-        public UsersController(IMongoClient mongoClient)
+        public UsersController(IUsersService service)
         {
-            _usersService = new UsersService(mongoClient);
+            _usersService = service;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            List<User> users = await _usersService.GetAllUsersAsync();
+            List<UserSQL> users = await _usersService.GetAllUsersAsync();
             return Ok(users);
         }
 
@@ -29,7 +29,7 @@ namespace final_project_server.Controllers
         {
             try
             {
-                User user = await _usersService.GetUserAsync(id);
+                UserSQL user = await _usersService.GetUserAsync(id);
                 return Ok(user);
             }
             catch(Exception ex)
@@ -42,7 +42,7 @@ namespace final_project_server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] User user)
+        public async Task<IActionResult> Post([FromBody] UserSQL user)
         {
             if (!ModelState.IsValid)
             {
@@ -61,7 +61,7 @@ namespace final_project_server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(string id, [FromBody] User updatedUser)
+        public async Task<IActionResult> Put(string id, [FromBody] UserSQL updatedUser)
         {
             try
             {

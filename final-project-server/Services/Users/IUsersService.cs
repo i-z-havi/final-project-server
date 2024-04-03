@@ -6,14 +6,16 @@ namespace final_project_server.Services.Users
 {
 	public interface IUsersService
 	{
-		Task<object> CreateUserAsync(User user);
+		Task<object> CreateUserAsync(UserSQL user);
 
-		Task<List<User>> GetAllUsersAsync();
+		Task<List<UserSQL>> GetAllUsersAsync();
 
-		Task<User> GetUserAsync(string userId);
+		Task<UserSQL> GetUserAsync(string userId);
 
 		Task DeleteUserAsync(string userId);
 
-		Task EditUserAsync(string userId, User updatedUser);
+		Task<UserSQL> EditUserAsync(string userId, UserSQL updatedUser);
+
+		Task<UserSQL> LoginAsync(LoginModel loginModel);
 	}
 }

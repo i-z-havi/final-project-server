@@ -1,82 +1,98 @@
 ﻿using final_project_server.Models.Users;
+using final_project_server.Services.Data.Repositories.Interfaces;
+using final_project_server.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace final_project_server.Services.Users
 {
-    public class UsersService : IUsersService
-    {
-        private IMongoCollection<User> _users;
+	public class UsersService : IUsersService
+	{
+		private IUserRepository _users;
 
-        public UsersService(IMongoClient mongoClient)
-        {
-            var database = mongoClient.GetDatabase("policies_website");
-            _users = database.GetCollection<User>("users");
-        }
+		public UsersService(IUserRepository repository)
+		{
+			_users = repository;
+		}
 
-        //create
-        public async Task<object> CreateUserAsync(User user)
-        {
-            var check = await _users.Find(u => u.Email == user.Email).FirstOrDefaultAsync();
-            if (check != null)
-            {
-                throw new Exception("User with this email already exists");
-            }
-            //Hash password here BEFORE insert!
-            await _users.InsertOneAsync(user);
-            return new { user.FirstName, user.Email, user.Id };
-        }
+		public async Task<object> CreateUserAsync(UserSQL user)
+		{
+			//TODO: password helper
+			user.Password = PasswordHelper.GeneratePassword(user.Password);
 
-        //get all
-        public async Task<List<User>> GetAllUsersAsync()
-        {
-            return await _users.Find(_ => true).ToListAsync();
-        }
+			bool creationSuccessful = await _users.CreateUserAsync(user);
 
-        //get one 
-        public async Task<User> GetUserAsync(string userId)
-        {
-            var builder = Builders<User>.Projection;
-            var projection = builder.Exclude("Password");
-            User user = await _users.Find(u => u.Id.ToString() == userId)
-                .Project<User>(projection)
-                .FirstOrDefaultAsync();
-            if (user == null)
-            {
-                throw new Exception("User not found");
-            }
-            return user;
-        }
+			if (creationSuccessful)
+			{
+				return new { user.Id, user.Email, user.FirstName };
+			}
+			else
+			{
+				throw new Exception("User already exists!");
+			}
+		}
 
-        //delete
-        public async Task DeleteUserAsync(string userId)
-        {
-            var result = await _users.DeleteOneAsync(u => u.Id.ToString() == userId);
-            if (result.DeletedCount == 0)
-            {
-                throw new Exception("User not found!");
-            }
-        }
+		public async Task<List<UserSQL>> GetAllUsersAsync()
+		{
+			List<UserSQL> users = await _users.GetAllUsersAsync();
+			return users;
+		}
 
-        // edit/update
-        public async Task EditUserAsync(string userId, User updatedUser)
-        {
-            var filter = Builders<User>.Filter.Eq(u => u.Id, new ObjectId(userId));
-            var update = Builders<User>.Update
-                .Set(u => u.FirstName, updatedUser.FirstName)
-                .Set(u => u.LastName, updatedUser.LastName)
-                .Set(u => u.Email, updatedUser.Email)
-                .Set(u => u.IsAdmin, updatedUser.IsAdmin)
-                .Set(u => u.Password, updatedUser.Password)
-                .Set(u => u.PoliticalLeaning, updatedUser.PoliticalLeaning);
+		public async Task<UserSQL> GetUserAsync(string userId)
+		{
+			UserSQL user = await _users.GetOneUserAsync(userId);
+			if (user != null)
+			{
+				return user;
+			}
+			else
+			{
+				throw new Exception("User not found!");
+			}
+		}
 
-            var result = await _users.UpdateOneAsync(filter, update);
+		public async Task DeleteUserAsync(string userId)
+		{
+			bool isDeleted = await _users.DeleteUserAsync(userId);
+			if (!isDeleted)
+			{
+				throw new Exception("User not found!");
+			}
+		}
 
-            if (result.MatchedCount == 0)
-            {
-                throw new Exception("User not found!");
-            }
-        }
-    }
+		public async Task<UserSQL> EditUserAsync(string userId, UserSQL updatedUser)
+		{
+			UserSQL user = await _users.EditUserAsync(userId, updatedUser);
+			if (user != null)
+			{
+				return user;
+			}
+			else
+			{
+				throw new Exception("User not found!");
+			}
+		}
+
+		public async Task<UserSQL> LoginAsync(LoginModel loginModel)
+		{
+			UserSQL user = await _users.GetUserByEmail(loginModel.UserName);
+			if (user != null)
+			{
+				if (PasswordHelper.VerifyPassword(user.Password, loginModel.Password))
+				{
+					user.Password = null;
+					return user;
+				}
+				else
+				{
+					throw new Exception("Incorrect password!");
+				}
+			}
+			else
+			{
+				throw new Exception("User not found!");
+			}
+		}
+	}
 }

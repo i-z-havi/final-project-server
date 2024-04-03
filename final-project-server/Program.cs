@@ -1,6 +1,7 @@
-using final_project_server.Data;
 using final_project_server.Middleware;
 using final_project_server.Services.Data;
+using final_project_server.Services.Data.Repositories.Interfaces;
+using final_project_server.Services.Data.Repositories.Users;
 using final_project_server.Services.Policies;
 using final_project_server.Services.Users;
 using Microsoft.EntityFrameworkCore;
@@ -21,12 +22,15 @@ namespace final_project_server
 			builder.Services.AddSwaggerGen();
 
 			builder.Services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(builder.Configuration.GetConnectionString("LaptopConnection"))
+				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 			);
 
-			builder.Services.AddScoped<IPoliciesService, PoliciesService>();
-			builder.Services.AddScoped<IUsersService, UsersService>();
-			
+			builder.Services.AddSingleton(serviceProvider =>
+			{
+				var configuration = serviceProvider.GetService<IConfiguration>();
+				return MongoDbService.CreateMongoClient(configuration);
+			});
+
 			builder.Services.AddCors(options =>
 			{
 				options.AddPolicy("myCorsPolicy", policy =>
@@ -37,6 +41,9 @@ namespace final_project_server
 				});
 			});
 
+			builder.Services.AddScoped<IUserRepository, UserRepositoryEF>();
+			builder.Services.AddScoped<IPoliciesService, PoliciesService>();
+			builder.Services.AddScoped<IUsersService, UsersService>();
 
 
 			var app = builder.Build();
