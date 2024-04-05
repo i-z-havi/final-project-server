@@ -81,7 +81,7 @@ namespace final_project_server.Services.Users
 			{
 				if (PasswordHelper.VerifyPassword(user.Password, loginModel.Password))
 				{
-					user.Password = null;
+					user.Password = "";
 					return user;
 				}
 				else

@@ -10,24 +10,24 @@ namespace final_project_server.Controllers
 	[ApiController]
 	public class PolicyController : ControllerBase
 	{
-		private PoliciesService _policiesService;
+		private IPoliciesService _policiesService;
 
-		public PolicyController(IMongoClient policiesService)
+		public PolicyController(IPoliciesService policiesService)
 		{
-			_policiesService = new PoliciesService(policiesService);
+			_policiesService = policiesService;
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> GetPolicies()
 		{
-			List<ProjectPolicyMongo> policies = await _policiesService.GetPoliciesAsync();
+			List<ProjectPolicySQL> policies = await _policiesService.GetPoliciesAsync();
 			return Ok(policies);
 		}
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetPolicy(string id)
 		{
-			ProjectPolicyMongo pol = await _policiesService.GetPolicyAsync(id);
+			ProjectPolicySQL pol = await _policiesService.GetPolicyAsync(id);
 			if (pol != null)
 			{
 				return Ok(pol);
@@ -36,19 +36,19 @@ namespace final_project_server.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreatePolicy([FromBody] ProjectPolicyMongo policy)
+		public async Task<IActionResult> CreatePolicy([FromBody] ProjectPolicySQL policy)
 		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
 
-			ProjectPolicyMongo pol = await _policiesService.CreatePolicyAsync(policy);
+			ProjectPolicySQL pol = await _policiesService.CreatePolicyAsync(policy);
 			return CreatedAtAction(nameof(GetPolicy), new { id = pol.Id }, pol);
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdatePolicy(string id, [FromBody] ProjectPolicyMongo pol)
+		public async Task<IActionResult> UpdatePolicy(string id, [FromBody] ProjectPolicySQL pol)
 		{
             if (!ModelState.IsValid)
             {

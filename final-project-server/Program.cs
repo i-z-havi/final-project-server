@@ -1,6 +1,7 @@
 using final_project_server.Middleware;
 using final_project_server.Services.Data;
 using final_project_server.Services.Data.Repositories.Interfaces;
+using final_project_server.Services.Data.Repositories.Policies;
 using final_project_server.Services.Data.Repositories.Users;
 using final_project_server.Services.Policies;
 using final_project_server.Services.Users;
@@ -22,7 +23,7 @@ namespace final_project_server
 			builder.Services.AddSwaggerGen();
 
 			builder.Services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+				options.UseSqlServer(builder.Configuration.GetConnectionString("LaptopConnection"))
 			);
 
 			builder.Services.AddSingleton(serviceProvider =>
@@ -42,6 +43,7 @@ namespace final_project_server
 			});
 
 			builder.Services.AddScoped<IUserRepository, UserRepositoryEF>();
+			builder.Services.AddScoped<IPolicyRepository, PolicyRepositoryEF>();
 			builder.Services.AddScoped<IPoliciesService, PoliciesService>();
 			builder.Services.AddScoped<IUsersService, UsersService>();
 

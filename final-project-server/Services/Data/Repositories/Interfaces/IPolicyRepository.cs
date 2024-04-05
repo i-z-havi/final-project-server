@@ -16,6 +16,6 @@ namespace final_project_server.Services.Data.Repositories.Interfaces
 
 		Task<bool> SignPolicy(string policyId, string userId);
 		
-		Task<bool> UnsignPolicy(string policyId, string userId);
+		//Task<bool> UnsignPolicy(string policyId, string userId);
 	}
 }

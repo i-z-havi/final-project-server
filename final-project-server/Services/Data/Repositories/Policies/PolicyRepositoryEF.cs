@@ -77,19 +77,24 @@ namespace final_project_server.Services.Data.Repositories.Policies
                 await _context.SaveChangesAsync();
                 return true;
             }
-            return false;
-        }
-
-        public async Task<bool> UnsignPolicy(string policyId, string userId)
-        {
-            ProjectPolicySign? policySignCheck = await _context.PolicySigners.FirstOrDefaultAsync(x => x.PolicyId == policyId && x.UserId == userId);
-            if (policySignCheck != null)
+            else
             {
-                 _context.PolicySigners.Remove(policySignCheck);
+                _context.PolicySigners.Remove(policySignCheck);
                 await _context.SaveChangesAsync();
                 return true;
             }
-            return false;
         }
+
+        //public async Task<bool> UnsignPolicy(string policyId, string userId)
+        //{
+        //    ProjectPolicySign? policySignCheck = await _context.PolicySigners.FirstOrDefaultAsync(x => x.PolicyId == policyId && x.UserId == userId);
+        //    if (policySignCheck != null)
+        //    {
+        //         _context.PolicySigners.Remove(policySignCheck);
+        //        await _context.SaveChangesAsync();
+        //        return true;
+        //    }
+        //    return false;
+        //}
     }
 }

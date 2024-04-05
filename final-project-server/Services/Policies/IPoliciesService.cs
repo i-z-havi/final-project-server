@@ -4,13 +4,13 @@ namespace final_project_server.Services.Policies
 {
 	public interface IPoliciesService
 	{
-		Task<ProjectPolicyMongo> CreatePolicyAsync(ProjectPolicyMongo policy);
+		Task<ProjectPolicySQL> CreatePolicyAsync(ProjectPolicySQL policy);
 
-		Task<ProjectPolicyMongo> GetPolicyAsync(string id);
+		Task<ProjectPolicySQL> GetPolicyAsync(string id);
 
-		Task<List<ProjectPolicyMongo>> GetPoliciesAsync();
+		Task<List<ProjectPolicySQL>> GetPoliciesAsync();
 
-		Task UpdatePolicyAsync(string id, ProjectPolicyMongo	 updatedPol);
+		Task<ProjectPolicySQL> UpdatePolicyAsync(string id, ProjectPolicySQL updatedPol);
 
 		Task DeletePolicyAsync(string id);
 	}

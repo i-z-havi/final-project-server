@@ -1,4 +1,5 @@
 ﻿using final_project_server.Models.Politics;
+using final_project_server.Services.Data.Repositories.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -6,31 +7,32 @@ namespace final_project_server.Services.Policies
 {
     public class PoliciesService : IPoliciesService
     {
-        public IMongoCollection<ProjectPolicyMongo> _policies;
+        public IPolicyRepository _policies;
 
-        public PoliciesService(IMongoClient mongoClient)
+        public PoliciesService(IPolicyRepository repo)
         {
-            var dataBase = mongoClient.GetDatabase("policies_website");
-            _policies = dataBase.GetCollection<ProjectPolicyMongo>("policies");
+            _policies = repo;
         }
 
         //create
-        public async Task<ProjectPolicyMongo> CreatePolicyAsync(ProjectPolicyMongo policy)
+        public async Task<ProjectPolicySQL> CreatePolicyAsync(ProjectPolicySQL policy)
         {
-            var check = await _policies.Find(u => u.Title == policy.Title).FirstOrDefaultAsync();
-            if (check != null)
+            bool result = await _policies.CreatePolicyAsync(policy);
+            if (result == true)
             {
-                throw new Exception("This policy already exists!");
+                return policy;
             }
-            await _policies.InsertOneAsync(policy);
-            return policy;
+            else
+            {
+                throw new Exception("Policy already exists!");
+            }
         }
 
         //read one 
-        public async Task<ProjectPolicyMongo> GetPolicyAsync(string id)
+        public async Task<ProjectPolicySQL> GetPolicyAsync(string id)
         {
-            ProjectPolicyMongo pol = await _policies.Find(p => p.Id.ToString() == id).FirstOrDefaultAsync();
-            if (pol == null)
+            ProjectPolicySQL pol = await _policies.GetPolicyAsync(id);
+            if(pol == null)
             {
                 throw new Exception("Policy not found!");
             }
@@ -38,35 +40,41 @@ namespace final_project_server.Services.Policies
         }
 
         //read all
-        public async Task<List<ProjectPolicyMongo>> GetPoliciesAsync()
+        public async Task<List<ProjectPolicySQL>> GetPoliciesAsync()
         {
-            return await _policies.Find(_ => true).ToListAsync();
+            return await _policies.GetPoliciesAsync();
         }
 
         //update 
-        public async Task UpdatePolicyAsync(string id, ProjectPolicyMongo updatedPol)
+        public async Task<ProjectPolicySQL> UpdatePolicyAsync(string id, ProjectPolicySQL updatedPol)
         {
-            var filter = Builders<ProjectPolicyMongo>.Filter.Eq(p => p.Id, new ObjectId(id));
-            var builder = Builders<ProjectPolicyMongo>.Update
-                .Set(p => p.Title, updatedPol.Title)
-                .Set(p => p.Subtitle, updatedPol.Subtitle)
-                .Set(p => p.Description, updatedPol.Description);
-
-            var count = await _policies.UpdateOneAsync(filter, builder);
-            if (count.MatchedCount == 0)
+            ProjectPolicySQL pol = await _policies.GetPolicyAsync(id);
+            if (pol==null)
             {
                 throw new Exception("Policy not found!");
             }
+            ProjectPolicySQL newUpdatedPol = await _policies.UpdatePolicyAsync(id, updatedPol);
+            return newUpdatedPol;
         }
 
         //delete
         public async Task DeletePolicyAsync(string id)
         {
-            var result = await _policies.DeleteOneAsync(p => p.Id.ToString() == id);
-            if (result.DeletedCount == 0)
+            bool result = await _policies.DeletePolicyAsync(id);
+            if (result == false)
             {
                 throw new Exception("Policy not found!");
             }
+        }
+
+        public async Task SignPolicyAsync(string policyId, string userId)
+        {
+            ProjectPolicySQL pol = await _policies.GetPolicyAsync(policyId);
+            if (pol==null)
+            {
+                throw new Exception("No policy found!");
+            }
+            await _policies.SignPolicy(policyId, userId);
         }
     }
 }

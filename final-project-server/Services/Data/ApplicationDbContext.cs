@@ -12,7 +12,7 @@ namespace final_project_server.Services.Data
         
         public DbSet<ProjectPolicySign> PolicySigners { get; set; }
 
-        public DbSet<PolicyDetail> PolicyDetails { get; set; }
+        public DbSet<PolicyDetails> PolicyDetails { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
