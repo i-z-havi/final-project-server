@@ -1,4 +1,5 @@
 ﻿using final_project_server.Models.Politics;
+using final_project_server.Models.Politics.Policy_Models;
 using final_project_server.Services.Data.Repositories.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -15,7 +16,7 @@ namespace final_project_server.Services.Policies
         }
 
         //create
-        public async Task<ProjectPolicySQL> CreatePolicyAsync(ProjectPolicySQL policy)
+        public async Task<ProjectPolicyNormalized> CreatePolicyAsync(ProjectPolicyNormalized policy)
         {
             bool result = await _policies.CreatePolicyAsync(policy);
             if (result == true)
@@ -29,9 +30,9 @@ namespace final_project_server.Services.Policies
         }
 
         //read one 
-        public async Task<ProjectPolicySQL> GetPolicyAsync(string id)
+        public async Task<ProjectPolicyNormalized> GetPolicyAsync(string id)
         {
-            ProjectPolicySQL pol = await _policies.GetPolicyAsync(id);
+            ProjectPolicyNormalized pol = await _policies.GetPolicyAsync(id);
             if(pol == null)
             {
                 throw new Exception("Policy not found!");
@@ -40,20 +41,20 @@ namespace final_project_server.Services.Policies
         }
 
         //read all
-        public async Task<List<ProjectPolicySQL>> GetPoliciesAsync()
+        public async Task<List<ProjectPolicyNormalized>> GetPoliciesAsync()
         {
             return await _policies.GetPoliciesAsync();
         }
 
         //update 
-        public async Task<ProjectPolicySQL> UpdatePolicyAsync(string id, ProjectPolicySQL updatedPol)
+        public async Task<ProjectPolicyNormalized> UpdatePolicyAsync(string id, ProjectPolicyNormalized updatedPol)
         {
-            ProjectPolicySQL pol = await _policies.GetPolicyAsync(id);
+            ProjectPolicyNormalized pol = await _policies.GetPolicyAsync(id);
             if (pol==null)
             {
                 throw new Exception("Policy not found!");
             }
-            ProjectPolicySQL newUpdatedPol = await _policies.UpdatePolicyAsync(id, updatedPol);
+            ProjectPolicyNormalized newUpdatedPol = await _policies.UpdatePolicyAsync(id, updatedPol);
             return newUpdatedPol;
         }
 
@@ -69,7 +70,7 @@ namespace final_project_server.Services.Policies
 
         public async Task SignPolicyAsync(string policyId, string userId)
         {
-            ProjectPolicySQL pol = await _policies.GetPolicyAsync(policyId);
+            ProjectPolicyNormalized pol = await _policies.GetPolicyAsync(policyId);
             if (pol==null)
             {
                 throw new Exception("No policy found!");

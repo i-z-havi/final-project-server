@@ -9,7 +9,7 @@ namespace final_project_server.Services.Data
         public DbSet<ProjectPolicySQL> Policies { get; set; }
 
         public DbSet<UserSQL> Users { get; set; }
-        
+
         public DbSet<ProjectPolicySign> PolicySigners { get; set; }
 
         public DbSet<PolicyDetails> PolicyDetails { get; set; }

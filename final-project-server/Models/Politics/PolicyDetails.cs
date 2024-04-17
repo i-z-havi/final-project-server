@@ -8,7 +8,7 @@ namespace final_project_server.Models.Politics
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         public required string PolicyId { get; set; }
 

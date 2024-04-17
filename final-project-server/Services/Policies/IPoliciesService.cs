@@ -1,17 +1,20 @@
 ﻿using final_project_server.Models.Politics;
+using final_project_server.Models.Politics.Policy_Models;
 
 namespace final_project_server.Services.Policies
 {
 	public interface IPoliciesService
 	{
-		Task<ProjectPolicySQL> CreatePolicyAsync(ProjectPolicySQL policy);
+		Task<ProjectPolicyNormalized> CreatePolicyAsync(ProjectPolicyNormalized policy);
 
-		Task<ProjectPolicySQL> GetPolicyAsync(string id);
+		Task<ProjectPolicyNormalized> GetPolicyAsync(string id);
 
-		Task<List<ProjectPolicySQL>> GetPoliciesAsync();
+		Task<List<ProjectPolicyNormalized>> GetPoliciesAsync();
 
-		Task<ProjectPolicySQL> UpdatePolicyAsync(string id, ProjectPolicySQL updatedPol);
+		Task<ProjectPolicyNormalized> UpdatePolicyAsync(string id, ProjectPolicyNormalized updatedPol);
 
 		Task DeletePolicyAsync(string id);
+
+		Task SignPolicyAsync(string policyId, string userId);
 	}
 }

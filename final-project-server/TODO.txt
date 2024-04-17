@@ -1,0 +1,5 @@
+-TODO:
+-Add policy detail support on users too!! (normalized user -> changed interfaces, controllers, services, repos...)
+
+-JUST DONE:
+-policies! they now properly update policy details and policy signers when updated and deleted
