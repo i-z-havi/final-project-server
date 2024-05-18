@@ -33,10 +33,6 @@ namespace final_project_server.Services.Policies
         public async Task<ProjectPolicyNormalized> GetPolicyAsync(string id)
         {
             ProjectPolicyNormalized pol = await _policies.GetPolicyAsync(id);
-            if(pol == null)
-            {
-                throw new Exception("Policy not found!");
-            }
             return pol;
         }
 

@@ -23,9 +23,12 @@ namespace final_project_server.Services.Data.Repositories.Policies
             }
             ProjectPolicySQL pol = new ProjectPolicySQL(policy);
             await _context.Policies.AddAsync(pol);
-            foreach(var detail in policy.Details)
+            if (policy.Details != null)
             {
-                await _context.PolicyDetails.AddAsync(new PolicyDetails { Leaning = detail, PolicyId = pol.Id });
+                foreach (var detail in policy.Details)
+                {
+                    await _context.PolicyDetails.AddAsync(new PolicyDetails { Leaning = detail, PolicyId = pol.Id });
+                }
             }
             await _context.SaveChangesAsync();
             return true;
@@ -67,7 +70,7 @@ namespace final_project_server.Services.Data.Repositories.Policies
         public async Task<ProjectPolicyNormalized> UpdatePolicyAsync(string id, ProjectPolicyNormalized updatedPol)
         {
             ProjectPolicySQL? oldPolicy = await _context.Policies.FindAsync(id);
-            List<PolicyDetails>? oldDetails = await _context.PolicyDetails.Where(d=>d.PolicyId==id).ToListAsync();
+            List<PolicyDetails>? oldDetails = await _context.PolicyDetails.Where(d => d.PolicyId == id).ToListAsync();
             if (oldPolicy == null)
             {
                 return null;
@@ -77,18 +80,18 @@ namespace final_project_server.Services.Data.Repositories.Policies
             oldPolicy.Description = updatedPol.Description;
             oldPolicy.Subtitle = updatedPol.Subtitle;
             //update details
-            if (updatedPol.Details!=null)
+            if (updatedPol.Details != null)
             {
-                if (oldDetails!=null)
+                if (oldDetails != null)
                 {
-                    foreach(PolicyDetails detail in oldDetails)
+                    foreach (PolicyDetails detail in oldDetails)
                     {
                         _context.PolicyDetails.Remove(detail);
                     }
                 }
                 foreach (var detail in updatedPol.Details)
                 {
-                    await _context.PolicyDetails.AddAsync(new PolicyDetails{ PolicyId=id, Leaning=detail});
+                    await _context.PolicyDetails.AddAsync(new PolicyDetails { PolicyId = id, Leaning = detail });
                 }
             }
             await _context.SaveChangesAsync();

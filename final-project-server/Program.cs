@@ -32,6 +32,12 @@ namespace final_project_server
 				return MongoDbService.CreateMongoClient(configuration);
 			});
 
+			//JWT
+			var key = builder.Configuration.GetSection("JWT:Key").Get<string>();
+
+
+
+			//change this later!
 			builder.Services.AddCors(options =>
 			{
 				options.AddPolicy("myCorsPolicy", policy =>
@@ -65,8 +71,7 @@ namespace final_project_server
 
 
 			app.MapControllers();
-
-			app.Run();
+            app.Run();
 		}
 	}
 }

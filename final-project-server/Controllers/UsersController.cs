@@ -36,9 +36,6 @@ namespace final_project_server.Controllers
             {
                 return NotFound(ex.Message);
             }
-
-
-
         }
 
         [HttpPost]

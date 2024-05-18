@@ -1,5 +1,11 @@
 -TODO:
+-Jwt support!
+
+-MAYBE:
 -Add policy detail support on users too!! (normalized user -> changed interfaces, controllers, services, repos...)
+	^note: i dont want users to become "tribalized", adding some sort of algorithm that only shows laws they agree with might cause that
+	^maybe we can make it so that laws shown are only slightly aligned? an overlap to have an "i see where they are coming from" moment
+	^will probably depend more on algorithms which is outside of current scope
 
 -JUST DONE:
 -policies! they now properly update policy details and policy signers when updated and deleted
