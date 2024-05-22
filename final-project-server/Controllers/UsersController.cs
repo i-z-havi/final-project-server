@@ -1,4 +1,5 @@
-﻿using final_project_server.Models.Users;
+﻿using final_project_server.Authentication;
+using final_project_server.Models.Users;
 using final_project_server.Services.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +33,7 @@ namespace final_project_server.Controllers
                 UserSQL user = await _usersService.GetUserAsync(id);
                 return Ok(user);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
@@ -83,6 +84,25 @@ namespace final_project_server.Controllers
                 return NotFound(e.Message);
             }
             return NoContent();
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                UserSQL? userCheck = await _usersService.LoginAsync(model);
+                string token = JwtHelper.GenerateAuthToken(userCheck);
+                return Ok(token);
+            }
+            catch
+            {
+                return Unauthorized("Incorrect Email or Password!");
+            }
         }
     }
 }

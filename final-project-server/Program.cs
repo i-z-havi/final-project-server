@@ -5,7 +5,10 @@ using final_project_server.Services.Data.Repositories.Policies;
 using final_project_server.Services.Data.Repositories.Users;
 using final_project_server.Services.Policies;
 using final_project_server.Services.Users;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace final_project_server
 {
@@ -32,20 +35,27 @@ namespace final_project_server
 				return MongoDbService.CreateMongoClient(configuration);
 			});
 
-			//JWT
-			var key = builder.Configuration.GetSection("JWT:Key").Get<string>();
-
-
-
 			//change this later!
 			builder.Services.AddCors(options =>
 			{
 				options.AddPolicy("myCorsPolicy", policy =>
 				{
-					policy.WithOrigins("*")
+					policy.WithOrigins("http://localhost:3000")
 					.AllowAnyMethod()
 					.AllowAnyHeader();
 				});
+			});
+
+            //THIS IS WHAT HTTPCONTEXT WORKS OFF OF!!
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+			{
+				options.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuer= true,
+					ValidateAudience=true,
+					ValidateIssuerSigningKey = true,
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JwtForProject")))
+				};
 			});
 
 			builder.Services.AddScoped<IUserRepository, UserRepositoryEF>();
