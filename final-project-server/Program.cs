@@ -1,3 +1,4 @@
+using final_project_server.Authentication;
 using final_project_server.Middleware;
 using final_project_server.Services.Data;
 using final_project_server.Services.Data.Repositories.Interfaces;
@@ -54,7 +55,7 @@ namespace final_project_server
 					ValidateIssuer= true,
 					ValidateAudience=true,
 					ValidateIssuerSigningKey = true,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JwtForProject")))
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtHelper.secretKey))
 				};
 			});
 

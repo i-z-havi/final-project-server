@@ -12,3 +12,7 @@
 
 -JUST DONE:
 -policies! they now properly update policy details and policy signers when updated and deleted
+
+
+NOTE:
+add env variable to make sure everything works!
