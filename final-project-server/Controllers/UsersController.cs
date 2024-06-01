@@ -1,6 +1,7 @@
 ﻿using final_project_server.Authentication;
 using final_project_server.Models.Users;
 using final_project_server.Services.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
@@ -19,6 +20,7 @@ namespace final_project_server.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy ="isAdmin")]
         public async Task<IActionResult> Get()
         {
             List<UserSQL> users = await _usersService.GetAllUsersAsync();

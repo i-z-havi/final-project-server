@@ -1,5 +1,5 @@
 -TODO:
--Jwt support! //actual JWT SHOULD be finished, now a matter of adding auth to controller + front end (localstorage)
+-Add proper auth to relevand HTTP calls
 -Add UpdatePolicy Auth check (must be admin or person who created policy) (edit sql table, edit models.)
 -Refactor code for normalized user 
 
@@ -12,6 +12,7 @@
 
 -JUST DONE:
 -policies! they now properly update policy details and policy signers when updated and deleted
+-Auth basis! 
 
 
 NOTE:

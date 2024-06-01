@@ -11,6 +11,8 @@ namespace final_project_server.Services.Policies
 
 		Task<List<ProjectPolicyNormalized>> GetPoliciesAsync();
 
+		Task<List<ProjectPolicyNormalized>> GetPendingPoliciesAsync();
+
 		Task<ProjectPolicyNormalized> UpdatePolicyAsync(string id, ProjectPolicyNormalized updatedPol);
 
 		Task DeletePolicyAsync(string id);

@@ -42,6 +42,11 @@ namespace final_project_server.Services.Policies
             return await _policies.GetPoliciesAsync();
         }
 
+        public async Task<List<ProjectPolicyNormalized>> GetPendingPoliciesAsync()
+        {
+            return await _policies.GetPendingPoliciesAsync();
+        }
+
         //update 
         public async Task<ProjectPolicyNormalized> UpdatePolicyAsync(string id, ProjectPolicyNormalized updatedPol)
         {

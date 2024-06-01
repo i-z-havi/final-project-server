@@ -11,7 +11,10 @@ namespace final_project_server.Services.Data.Repositories.Interfaces
 
 		Task<List<ProjectPolicyNormalized>> GetPoliciesAsync();
 
+		Task<List<ProjectPolicyNormalized>> GetPendingPoliciesAsync();
+
 		Task<ProjectPolicyNormalized> UpdatePolicyAsync(string id, ProjectPolicyNormalized updatedPol);
+
 
 		Task<bool> DeletePolicyAsync(string id);
 

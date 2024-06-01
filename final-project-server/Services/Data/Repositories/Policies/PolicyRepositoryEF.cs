@@ -52,7 +52,7 @@ namespace final_project_server.Services.Data.Repositories.Policies
 
         public async Task<List<ProjectPolicyNormalized>> GetPoliciesAsync()
         {
-            var policies = await _context.Policies.ToListAsync();
+            var policies = await _context.Policies.Where(p => p.IsActive == true).ToListAsync();
             Dictionary<string, List<string>> signaturesByPolicyId = await _context.PolicySigners
                                                             .GroupBy(sign => sign.PolicyId)
                                                             .ToDictionaryAsync(group => group.Key, group => group.Select((sign) => sign.UserId).ToList());
@@ -61,10 +61,25 @@ namespace final_project_server.Services.Data.Repositories.Policies
                                                              .GroupBy(detail => detail.PolicyId)
                                                              .ToDictionaryAsync(group => group.Key, group => group.Select((detail) => detail.Leaning).ToList());
 
-            //insert signatures here!
             return policies.Select(policySQL => new ProjectPolicyNormalized(policySQL,
                                 detailsByPolicyID.GetValueOrDefault(policySQL.Id, new List<PoliticalEnum>()),
                                 signaturesByPolicyId.GetValueOrDefault(policySQL.Id, new List<string>()))).ToList();
+        }
+
+        public async Task<List<ProjectPolicyNormalized>> GetPendingPoliciesAsync()
+        {
+            var policies = await _context.Policies.Where(p => p.IsActive == false).ToListAsync();
+            Dictionary<string, List<string>> signaturesByPolicyId = await _context.PolicySigners
+                                                            .GroupBy(sign => sign.PolicyId)
+                                                            .ToDictionaryAsync(group => group.Key, group => group.Select((sign) => sign.UserId).ToList());
+
+            Dictionary<string, List<PoliticalEnum>> detailsByPolicyID = await _context.PolicyDetails
+                                                             .GroupBy(detail => detail.PolicyId)
+                                                             .ToDictionaryAsync(group => group.Key, group => group.Select((detail) => detail.Leaning).ToList());
+
+            return policies.Select(policySQL => new ProjectPolicyNormalized(policySQL,
+                               detailsByPolicyID.GetValueOrDefault(policySQL.Id, new List<PoliticalEnum>()),
+                               signaturesByPolicyId.GetValueOrDefault(policySQL.Id, new List<string>()))).ToList();
         }
 
         public async Task<ProjectPolicyNormalized> UpdatePolicyAsync(string id, ProjectPolicyNormalized updatedPol)
