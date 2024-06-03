@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using System.Security.Claims;
 
 namespace final_project_server.Controllers
 {
@@ -34,6 +35,16 @@ namespace final_project_server.Controllers
             return Ok(pendingPolicies);
         }
 
+        [HttpGet("my_petitions")]
+        public async Task<IActionResult> GetMyPoliciesAsync()
+        {
+            string id = HttpContext.User.FindFirstValue("id") ?? "";
+            Console.WriteLine(id);
+            List<ProjectPolicyNormalized> myPolicies = await _policiesService.GetMyPoliciesAsync(id);
+            return Ok(myPolicies);
+        }
+
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPolicy(string id)
         {
@@ -48,11 +59,11 @@ namespace final_project_server.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePolicy([FromBody] ProjectPolicyNormalized policy)
         {
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
             ProjectPolicyNormalized pol = await _policiesService.CreatePolicyAsync(policy);
             return CreatedAtAction(nameof(GetPolicy), new { id = pol.Id }, pol);
         }

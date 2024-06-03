@@ -12,6 +12,8 @@
 
         public bool IsActive { get; set; } = false;
 
+        public string CreatorId {  get; set; }
+
         public List<PoliticalEnum>? Details { get; set; }
 
         public List<string>? Signatures { get; set; }
@@ -27,6 +29,7 @@
             Subtitle = sqlPolicy.Subtitle;
             Description = sqlPolicy.Description;
             IsActive = sqlPolicy.IsActive;
+            CreatorId = sqlPolicy.CreatorId;
             Details = details;
             Signatures = signatureList;
         }

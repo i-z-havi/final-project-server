@@ -42,6 +42,12 @@ namespace final_project_server.Services.Policies
             return await _policies.GetPoliciesAsync();
         }
 
+        public async Task<List<ProjectPolicyNormalized>> GetMyPoliciesAsync(string userId)
+        {
+            return await _policies.GetMyPoliciesAsync(userId);
+        }
+
+
         public async Task<List<ProjectPolicyNormalized>> GetPendingPoliciesAsync()
         {
             return await _policies.GetPendingPoliciesAsync();
@@ -51,7 +57,7 @@ namespace final_project_server.Services.Policies
         public async Task<ProjectPolicyNormalized> UpdatePolicyAsync(string id, ProjectPolicyNormalized updatedPol)
         {
             ProjectPolicyNormalized pol = await _policies.GetPolicyAsync(id);
-            if (pol==null)
+            if (pol == null)
             {
                 throw new Exception("Policy not found!");
             }
@@ -72,7 +78,7 @@ namespace final_project_server.Services.Policies
         public async Task SignPolicyAsync(string policyId, string userId)
         {
             ProjectPolicyNormalized pol = await _policies.GetPolicyAsync(policyId);
-            if (pol==null)
+            if (pol == null)
             {
                 throw new Exception("No policy found!");
             }
