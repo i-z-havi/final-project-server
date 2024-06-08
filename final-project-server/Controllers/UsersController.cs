@@ -1,6 +1,8 @@
 ﻿using final_project_server.Authentication;
 using final_project_server.Models.Users;
+using final_project_server.Models.Users.Models;
 using final_project_server.Services.Users;
+using final_project_server.Uploads;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +22,7 @@ namespace final_project_server.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy ="isAdmin")]
+        [Authorize(Policy = "isAdmin")]
         public async Task<IActionResult> Get()
         {
             List<UserSQL> users = await _usersService.GetAllUsersAsync();
@@ -42,13 +44,13 @@ namespace final_project_server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] UserSQL user)
+        public async Task<IActionResult> Post([FromBody] UserNormalized user)
         {
+            Console.WriteLine(user);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
             try
             {
                 object DTOuser = await _usersService.CreateUserAsync(user);
@@ -58,6 +60,16 @@ namespace final_project_server.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost("uploadpfp")]
+        public async Task<IActionResult> Post(IFormFile pfp)
+        {
+            if (pfp == null || pfp.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+            return Ok(UploadHandler.Upload(pfp));
         }
 
         [HttpPut("{id}")]

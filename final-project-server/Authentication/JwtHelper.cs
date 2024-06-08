@@ -1,4 +1,4 @@
-﻿using final_project_server.Models.Users;
+﻿using final_project_server.Models.Users.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -20,7 +20,8 @@ namespace final_project_server.Authentication
             {
                 new Claim("id",user.Id.ToString()),
                 new Claim("firstName",user.FirstName.ToString()),
-                new Claim("isAdmin",user.IsAdmin.ToString())
+                new Claim("isAdmin",user.IsAdmin.ToString()),
+                new Claim("profilePicture",user.ProfilePicture)
             };
 
             var token = new JwtSecurityToken(

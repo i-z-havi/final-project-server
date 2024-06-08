@@ -38,12 +38,6 @@ namespace final_project_server
                 x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             });
 
-            builder.Services.AddSingleton(serviceProvider =>
-            {
-                var configuration = serviceProvider.GetService<IConfiguration>();
-                return MongoDbService.CreateMongoClient(configuration);
-            });
-
             //change this later!
             builder.Services.AddCors(options =>
             {

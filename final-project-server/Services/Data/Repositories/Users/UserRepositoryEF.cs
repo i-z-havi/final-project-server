@@ -1,4 +1,4 @@
-﻿using final_project_server.Models.Users;
+﻿using final_project_server.Models.Users.Models;
 using final_project_server.Services.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,12 +13,13 @@ namespace final_project_server.Services.Data.Repositories.Users
             _context = context;
         }
 
-        public async Task<bool> CreateUserAsync(UserSQL user)
+        public async Task<bool> CreateUserAsync(UserNormalized user)
         {
             var newUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
             if (newUser == null)
             {
-                await _context.Users.AddAsync(user);
+                UserSQL userSQL = new UserSQL(user);
+                await _context.Users.AddAsync(userSQL);
                 await _context.SaveChangesAsync();
                 return true;
             }

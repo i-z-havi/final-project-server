@@ -1,7 +1,8 @@
 ﻿using final_project_server.Models.Politics;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 
-namespace final_project_server.Models.Users
+namespace final_project_server.Models.Users.Models
 {
     public class UserNormalized
     {
@@ -19,7 +20,9 @@ namespace final_project_server.Models.Users
         [Required]
         public string LastName { get; set; }
 
-        public List<PoliticalEnum> PoliticalLeanings { get; set; }
+        public List<PoliticalEnum>? PoliticalLeanings { get; set; }
+
+        public string? ProfilePicture { get; set; }
 
         public bool IsAdmin { get; set; } = false;
 

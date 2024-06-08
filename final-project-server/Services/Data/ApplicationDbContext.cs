@@ -1,5 +1,6 @@
 ﻿using final_project_server.Models.Politics;
 using final_project_server.Models.Users;
+using final_project_server.Models.Users.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace final_project_server.Services.Data

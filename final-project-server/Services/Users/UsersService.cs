@@ -1,4 +1,5 @@
 ﻿using final_project_server.Models.Users;
+using final_project_server.Models.Users.Models;
 using final_project_server.Services.Data.Repositories.Interfaces;
 using final_project_server.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using MongoDB.Driver;
 
 namespace final_project_server.Services.Users
 {
-	public class UsersService : IUsersService
+    public class UsersService : IUsersService
 	{
 		private IUserRepository _users;
 
@@ -16,9 +17,8 @@ namespace final_project_server.Services.Users
 			_users = repository;
 		}
 
-		public async Task<object> CreateUserAsync(UserSQL user)
+		public async Task<object> CreateUserAsync(UserNormalized user)
 		{
-			//TODO: password helper
 			user.Password = PasswordHelper.GeneratePassword(user.Password);
 
 			bool creationSuccessful = await _users.CreateUserAsync(user);
