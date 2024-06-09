@@ -63,6 +63,7 @@ namespace final_project_server.Services.Users
 
 		public async Task<UserSQL> EditUserAsync(string userId, UserSQL updatedUser)
 		{
+			updatedUser.Password = PasswordHelper.GeneratePassword(updatedUser.Password);
 			UserSQL user = await _users.EditUserAsync(userId, updatedUser);
 			if (user != null)
 			{

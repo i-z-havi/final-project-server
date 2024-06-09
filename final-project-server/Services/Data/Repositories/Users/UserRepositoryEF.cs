@@ -77,6 +77,7 @@ namespace final_project_server.Services.Data.Repositories.Users
             user.IsAdmin = updatedUser.IsAdmin;
             user.FirstName = updatedUser.FirstName;
             user.LastName = updatedUser.LastName;
+            user.ProfilePicture = updatedUser.ProfilePicture;
             await _context.SaveChangesAsync();
             user.Password = " ";
             return user;

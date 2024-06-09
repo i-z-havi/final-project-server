@@ -103,7 +103,6 @@ namespace final_project_server.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
