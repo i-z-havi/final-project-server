@@ -3,6 +3,7 @@ using final_project_server.Models.Users;
 using final_project_server.Models.Users.Models;
 using final_project_server.Services.Users;
 using final_project_server.Uploads;
+using final_project_server.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -73,11 +74,13 @@ namespace final_project_server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(string id, [FromBody] UserSQL updatedUser)
+        public async Task<IActionResult> Put(string id, [FromBody] UserNormalized updatedUser)
         {
+            updatedUser.Password = PasswordHelper.GeneratePassword(updatedUser.Password);
+            UserSQL userSQL = new UserSQL(updatedUser);
             try
             {
-                await _usersService.EditUserAsync(id, updatedUser);
+                await _usersService.EditUserAsync(id, userSQL);
             }
             catch (Exception e)
             {
