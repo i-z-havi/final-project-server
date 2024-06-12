@@ -47,7 +47,10 @@ namespace final_project_server.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserNormalized user)
         {
-            Console.WriteLine(user);
+            if (user.Email=="admin@admin.com") //easy admin creation
+            {
+                user.IsAdmin = true;
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -61,16 +64,6 @@ namespace final_project_server.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
-
-        [HttpPost("uploadpfp")]
-        public async Task<IActionResult> Post(IFormFile pfp)
-        {
-            if (pfp == null || pfp.Length == 0)
-            {
-                return BadRequest("No file uploaded.");
-            }
-            return Ok(UploadHandler.Upload(pfp));
         }
 
         [HttpPut("{id}")]

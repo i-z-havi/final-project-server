@@ -3,22 +3,24 @@ using final_project_server.Models.Politics.Policy_Models;
 
 namespace final_project_server.Services.Policies
 {
-	public interface IPoliciesService
-	{
-		Task<ProjectPolicyNormalized> CreatePolicyAsync(ProjectPolicyNormalized policy);
+    public interface IPoliciesService
+    {
+        Task<ProjectPolicyNormalized> CreatePolicyAsync(ProjectPolicyNormalized policy);
 
-		Task<ProjectPolicyNormalized> GetPolicyAsync(string id);
+        Task<ProjectPolicyNormalized> GetPolicyAsync(string id);
 
-		Task<List<ProjectPolicyNormalized>> GetPoliciesAsync();
+        Task<List<ProjectPolicyNormalized>> GetPoliciesAsync();
 
         Task<List<ProjectPolicyNormalized>> GetMyPoliciesAsync(string userId);
 
         Task<List<ProjectPolicyNormalized>> GetPendingPoliciesAsync();
 
-		Task<ProjectPolicyNormalized> UpdatePolicyAsync(string id, ProjectPolicyNormalized updatedPol);
+        Task<ProjectPolicyNormalized> UpdatePolicyAsync(string id, ProjectPolicyNormalized updatedPol);
 
-		Task DeletePolicyAsync(string id);
+        Task AllowPolicyAsync(string policyId);
 
-		Task SignPolicyAsync(string policyId, string userId);
-	}
+        Task DeletePolicyAsync(string id);
+
+        Task SignPolicyAsync(string policyId, string userId);
+    }
 }

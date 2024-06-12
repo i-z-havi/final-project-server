@@ -16,7 +16,7 @@ namespace final_project_server.Models.Politics
 
         public bool IsActive { get; set; } = false;
 
-        public string CreatorId { get; set; }
+        public string? CreatorId { get; set; }
 
         public ProjectPolicySQL() { }
 

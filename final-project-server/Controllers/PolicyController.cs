@@ -87,12 +87,27 @@ namespace final_project_server.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> SignPolicy(string id, string userid)
+        public async Task<IActionResult> SignPolicy(string id)
         {
-            //MAKE THIS USE HTTPCONTEXT USER! this was only to check if the request goes through
             try
             {
-                await _policiesService.SignPolicyAsync(id, userid);
+                string userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "id").ToString();
+                await _policiesService.SignPolicyAsync(id, userId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPatch("allow/{id}")]
+        [Authorize(Policy = "isAdmin")]
+        public async Task<IActionResult> AllowPolicy(string id)
+        {
+            try
+            {
+                await _policiesService.AllowPolicyAsync(id);
                 return NoContent();
             }
             catch (Exception ex)

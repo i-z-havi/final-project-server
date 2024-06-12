@@ -12,7 +12,7 @@
 
         public bool IsActive { get; set; } = false;
 
-        public string CreatorId {  get; set; }
+        public string? CreatorId {  get; set; }
 
         public List<PoliticalEnum>? Details { get; set; }
 

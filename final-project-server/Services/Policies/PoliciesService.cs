@@ -84,5 +84,15 @@ namespace final_project_server.Services.Policies
             }
             await _policies.SignPolicy(policyId, userId);
         }
+
+        public async Task AllowPolicyAsync(string policyId)
+        {
+            ProjectPolicyNormalized pol = await _policies.GetPolicyAsync(policyId);
+            if (pol == null)
+            {
+                throw new Exception("No policy found!");
+            }
+            await _policies.AllowPolicy(policyId);
+        }
     }
 }

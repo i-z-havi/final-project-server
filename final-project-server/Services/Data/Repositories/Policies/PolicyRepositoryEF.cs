@@ -160,6 +160,14 @@ namespace final_project_server.Services.Data.Repositories.Policies
             }
         }
 
+        public async Task<bool> AllowPolicy(string policyId)
+        {
+            ProjectPolicySQL pol = await _context.Policies.FirstOrDefaultAsync(p => p.Id == policyId);
+            pol.IsActive = true;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         //public async Task<bool> UnsignPolicy(string policyId, string userId)
         //{
         //    ProjectPolicySign? policySignCheck = await _context.PolicySigners.FirstOrDefaultAsync(x => x.PolicyId == policyId && x.UserId == userId);
