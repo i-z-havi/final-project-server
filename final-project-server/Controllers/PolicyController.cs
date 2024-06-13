@@ -89,9 +89,10 @@ namespace final_project_server.Controllers
         [HttpPatch("{id}")]
         public async Task<IActionResult> SignPolicy(string id)
         {
+            string userId = HttpContext.User.FindFirstValue("id") ?? "";
+
             try
             {
-                string userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "id").ToString();
                 await _policiesService.SignPolicyAsync(id, userId);
                 return NoContent();
             }

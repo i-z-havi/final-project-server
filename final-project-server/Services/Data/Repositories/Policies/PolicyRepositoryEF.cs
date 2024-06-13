@@ -110,6 +110,7 @@ namespace final_project_server.Services.Data.Repositories.Policies
             oldPolicy.Title = updatedPol.Title;
             oldPolicy.Description = updatedPol.Description;
             oldPolicy.Subtitle = updatedPol.Subtitle;
+            oldPolicy.IsActive = false;
             //update details
             if (updatedPol.Details != null)
             {
