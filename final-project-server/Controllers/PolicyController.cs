@@ -71,6 +71,12 @@ namespace final_project_server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePolicy(string id, [FromBody] ProjectPolicyNormalized pol)
         {
+            string userid = HttpContext.User.FindFirstValue("id") ?? "";
+            ProjectPolicyNormalized ownerPol = await _policiesService.GetPolicyAsync(id);
+            if (ownerPol.CreatorId != userid)
+            {
+                return Unauthorized("Only your own petitions may be edited");
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
