@@ -126,15 +126,22 @@ namespace final_project_server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePolicy(string id)
         {
-            try
+            string userid = HttpContext.User.FindFirstValue("id") ?? "";
+            bool isAdmin = ("true" == HttpContext.User.FindFirstValue("isAdmin"));
+            ProjectPolicyNormalized checkOwner = await _policiesService.GetPolicyAsync(id);
+            if (isAdmin || userid == checkOwner.CreatorId)
             {
-                await _policiesService.DeletePolicyAsync(id);
-                return NoContent();
+                try
+                {
+                    await _policiesService.DeletePolicyAsync(id);
+                    return NoContent();
+                }
+                catch (Exception ex)
+                {
+                    return NotFound(ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            return Unauthorized();
         }
     }
 }

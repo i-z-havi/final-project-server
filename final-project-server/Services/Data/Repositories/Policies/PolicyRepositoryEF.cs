@@ -164,7 +164,7 @@ namespace final_project_server.Services.Data.Repositories.Policies
         public async Task<bool> AllowPolicy(string policyId)
         {
             ProjectPolicySQL pol = await _context.Policies.FirstOrDefaultAsync(p => p.Id == policyId);
-            pol.IsActive = true;
+            pol.IsActive = !pol.IsActive;
             await _context.SaveChangesAsync();
             return true;
         }
