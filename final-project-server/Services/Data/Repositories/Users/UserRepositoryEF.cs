@@ -1,4 +1,5 @@
-﻿using final_project_server.Models.Users.Models;
+﻿using final_project_server.Models.Politics;
+using final_project_server.Models.Users.Models;
 using final_project_server.Services.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -67,7 +68,8 @@ namespace final_project_server.Services.Data.Repositories.Users
         public async Task<UserSQL> EditUserAsync(string userId, UserSQL updatedUser)
         {
             var user = await _context.Users.FindAsync(userId);
-            if (user == null)
+            UserSQL? userCheck = await _context.Users.FirstOrDefaultAsync(user => (user.Id != userId && updatedUser.Email  == user.Email));
+            if (user == null||userCheck!=null)
             {
                 return null;
             }

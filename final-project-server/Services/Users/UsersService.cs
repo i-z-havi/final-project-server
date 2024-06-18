@@ -63,6 +63,11 @@ namespace final_project_server.Services.Users
 
         public async Task<UserSQL> EditUserAsync(string userId, UserSQL updatedUser)
         {
+            UserSQL checkExists = await GetUserAsync(userId);
+            if (checkExists == null)
+            {
+                throw new Exception("User does not exist!");
+            }
             UserSQL user = await _users.EditUserAsync(userId, updatedUser);
             if (user != null)
             {
@@ -70,7 +75,7 @@ namespace final_project_server.Services.Users
             }
             else
             {
-                throw new Exception("User not found!");
+                throw new Exception("User Email already taken!");
             }
         }
 
