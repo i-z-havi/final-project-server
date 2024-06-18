@@ -47,10 +47,6 @@ namespace final_project_server.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserSQL user)
         {
-            if (user.Email=="admin@admin.com") //easy admin creation
-            {
-                user.IsAdmin = true;
-            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
