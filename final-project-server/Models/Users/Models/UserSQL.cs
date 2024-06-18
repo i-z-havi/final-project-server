@@ -23,16 +23,5 @@ namespace final_project_server.Models.Users.Models
         public string? ProfilePicture { get; set; }
 
         public UserSQL() { }
-
-        public UserSQL(UserNormalized normalUser)
-        {
-            Id = normalUser.Id.ToString();
-            Email = normalUser.Email;
-            Password = normalUser.Password;
-            FirstName = normalUser.FirstName;
-            LastName = normalUser.LastName;
-            IsAdmin = normalUser.IsAdmin;
-            ProfilePicture = normalUser.ProfilePicture;
-        }
     }
 }

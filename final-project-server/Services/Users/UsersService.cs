@@ -17,7 +17,7 @@ namespace final_project_server.Services.Users
             _users = repository;
         }
 
-        public async Task<object> CreateUserAsync(UserNormalized user)
+        public async Task<object> CreateUserAsync(UserSQL user)
         {
             user.Password = PasswordHelper.GeneratePassword(user.Password);
 

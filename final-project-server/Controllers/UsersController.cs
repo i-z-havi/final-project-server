@@ -45,7 +45,7 @@ namespace final_project_server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] UserNormalized user)
+        public async Task<IActionResult> Post([FromBody] UserSQL user)
         {
             if (user.Email=="admin@admin.com") //easy admin creation
             {
@@ -67,13 +67,12 @@ namespace final_project_server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(string id, [FromBody] UserNormalized updatedUser)
+        public async Task<IActionResult> Put(string id, [FromBody] UserSQL updatedUser)
         {
             updatedUser.Password = PasswordHelper.GeneratePassword(updatedUser.Password);
-            UserSQL userSQL = new UserSQL(updatedUser);
             try
             {
-                await _usersService.EditUserAsync(id, userSQL);
+                await _usersService.EditUserAsync(id, updatedUser);
             }
             catch (Exception e)
             {

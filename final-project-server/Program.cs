@@ -28,7 +28,7 @@ namespace final_project_server
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("LaptopConnection"))
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
             );
 
             builder.Services.AddControllers().AddJsonOptions(x =>

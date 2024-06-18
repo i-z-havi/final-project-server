@@ -59,13 +59,19 @@ namespace final_project_server.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePolicy([FromBody] ProjectPolicyNormalized policy)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            try
+            {
             ProjectPolicyNormalized pol = await _policiesService.CreatePolicyAsync(policy);
             return CreatedAtAction(nameof(GetPolicy), new { id = pol.Id }, pol);
+            }
+            catch(Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]

@@ -4,7 +4,7 @@
 	{
 		Left,
 		Right,
-		EconomicLeft,
-		EconomicRight
+		Social,
+		Economic
 	}
 }

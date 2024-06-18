@@ -62,6 +62,10 @@ namespace final_project_server.Services.Policies
                 throw new Exception("Policy not found!");
             }
             ProjectPolicyNormalized newUpdatedPol = await _policies.UpdatePolicyAsync(id, updatedPol);
+            if (newUpdatedPol==null)
+            {
+                throw new Exception("Another policy has this title!");
+            }
             return newUpdatedPol;
         }
 

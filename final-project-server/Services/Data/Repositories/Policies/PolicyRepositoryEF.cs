@@ -101,17 +101,18 @@ namespace final_project_server.Services.Data.Repositories.Policies
         public async Task<ProjectPolicyNormalized> UpdatePolicyAsync(string id, ProjectPolicyNormalized updatedPol)
         {
             ProjectPolicySQL? oldPolicy = await _context.Policies.FindAsync(id);
-            List<PolicyDetails>? oldDetails = await _context.PolicyDetails.Where(d => d.PolicyId == id).ToListAsync();
-            if (oldPolicy == null)
+            ProjectPolicySQL? policyCheck = await _context.Policies.FirstOrDefaultAsync(pol => (pol.Id != id && pol.Title == updatedPol.Title)); 
+            if (oldPolicy == null||policyCheck!=null)
             {
                 return null;
             }
-            //update policy
+            List<PolicyDetails>? oldDetails = await _context.PolicyDetails.Where(d => d.PolicyId == id).ToListAsync();
+
             oldPolicy.Title = updatedPol.Title;
             oldPolicy.Description = updatedPol.Description;
             oldPolicy.Subtitle = updatedPol.Subtitle;
             oldPolicy.IsActive = false;
-            //update details
+
             if (updatedPol.Details != null)
             {
                 if (oldDetails != null)
@@ -169,16 +170,5 @@ namespace final_project_server.Services.Data.Repositories.Policies
             return true;
         }
 
-        //public async Task<bool> UnsignPolicy(string policyId, string userId)
-        //{
-        //    ProjectPolicySign? policySignCheck = await _context.PolicySigners.FirstOrDefaultAsync(x => x.PolicyId == policyId && x.UserId == userId);
-        //    if (policySignCheck != null)
-        //    {
-        //         _context.PolicySigners.Remove(policySignCheck);
-        //        await _context.SaveChangesAsync();
-        //        return true;
-        //    }
-        //    return false;
-        //}
     }
 }

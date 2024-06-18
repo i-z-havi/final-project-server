@@ -13,13 +13,12 @@ namespace final_project_server.Services.Data.Repositories.Users
             _context = context;
         }
 
-        public async Task<bool> CreateUserAsync(UserNormalized user)
+        public async Task<bool> CreateUserAsync(UserSQL user)
         {
             var newUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
             if (newUser == null)
             {
-                UserSQL userSQL = new UserSQL(user);
-                await _context.Users.AddAsync(userSQL);
+                await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
                 return true;
             }

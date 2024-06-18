@@ -7,7 +7,7 @@ namespace final_project_server.Services.Users
 {
     public interface IUsersService
 	{
-		Task<object> CreateUserAsync(UserNormalized user);
+		Task<object> CreateUserAsync(UserSQL user);
 
 		Task<List<UserSQL>> GetAllUsersAsync();
 
