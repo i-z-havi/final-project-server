@@ -20,9 +20,17 @@ namespace final_project_server
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.Configuration.AddUserSecrets<Program>();
+
+            // Configure JwtConfig options
+            builder.Services.Configure<JwtPOCO>(builder.Configuration.GetSection("Jwt"));
+
+            // Register AuthService as a singleton
+            builder.Services.AddSingleton<JwtHelper>();
+
 
             builder.Services.AddControllers();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -38,7 +46,6 @@ namespace final_project_server
                 x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             });
 
-            //change this later!
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("myCorsPolicy", policy =>
@@ -49,7 +56,6 @@ namespace final_project_server
                 });
             });
 
-            //THIS IS WHAT HTTPCONTEXT WORKS OFF OF!!
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -57,9 +63,9 @@ namespace final_project_server
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtHelper.secretKey)),
-                    ValidIssuer= "PetitionBackEnd",
-                    ValidAudience= "PetitionFrontEnd"
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+                    ValidIssuer = "PetitionBackEnd",
+                    ValidAudience = "PetitionFrontEnd"
                 };
             });
 
@@ -67,7 +73,7 @@ namespace final_project_server
             {
                 options.AddPolicy("isAdmin", policy =>
                 {
-                    policy.RequireClaim("isAdmin","True");
+                    policy.RequireClaim("isAdmin", "True");
                 });
             });
 
@@ -78,6 +84,11 @@ namespace final_project_server
 
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var authService = scope.ServiceProvider.GetRequiredService<JwtHelper>();
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

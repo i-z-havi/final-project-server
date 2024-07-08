@@ -1,4 +1,5 @@
 ﻿using final_project_server.Models.Users.Models;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -9,11 +10,20 @@ namespace final_project_server.Authentication
 
     public class JwtHelper
     {
-        public static readonly string secretKey = Environment.GetEnvironmentVariable("JwtForProject");
+        private static string _jwtKey;
+
+        public JwtHelper(IOptions<JwtPOCO> jwtConfig)
+        {
+            _jwtKey = jwtConfig.Value.Key;
+        }
 
         public static string GenerateAuthToken(UserSQL user)
         {
-            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            if (string.IsNullOrEmpty(_jwtKey))
+            {
+                throw new InvalidOperationException("JWT key is not initialized.");
+            }
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var tokenClaims = new Claim[]

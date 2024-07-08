@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>false</InvariantGlobalization>
     <RootNamespace>final_project_server</RootNamespace>
+    <UserSecretsId>287ae912-e3c1-44c3-b4ea-e0e5e6147137</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
