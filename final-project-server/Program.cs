@@ -50,7 +50,7 @@ namespace final_project_server
             {
                 options.AddPolicy("myCorsPolicy", policy =>
                 {
-                    policy.WithOrigins("http://localhost:3000")
+                    policy.WithOrigins("http://localhost:3000", "https://final-for-course.onrender.com")
                     .AllowAnyMethod()
                     .AllowAnyHeader();
                 });
