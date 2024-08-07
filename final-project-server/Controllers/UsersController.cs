@@ -1,6 +1,7 @@
 ﻿using final_project_server.Authentication;
 using final_project_server.Models.Users;
 using final_project_server.Models.Users.Models;
+using final_project_server.Services;
 using final_project_server.Services.Users;
 using final_project_server.Uploads;
 using final_project_server.Utilities;
@@ -16,10 +17,12 @@ namespace final_project_server.Controllers
     public class UsersController : ControllerBase
     {
         private IUsersService _usersService;
+        private readonly KeyVaultService _keyVaultService;
 
-        public UsersController(IUsersService service)
+        public UsersController(IUsersService service, KeyVaultService keyVaultService)
         {
             _usersService = service;
+            _keyVaultService = keyVaultService;
         }
 
         [HttpGet]
@@ -101,7 +104,8 @@ namespace final_project_server.Controllers
             try
             {
                 UserSQL? userCheck = await _usersService.LoginAsync(model);
-                string token = JwtHelper.GenerateAuthToken(userCheck);
+                string jwtKey = await _keyVaultService.GetSecretAsync("JwtKey");
+                string token = JwtHelper.GenerateAuthToken(userCheck, jwtKey);
                 return Ok(token);
             }
             catch

@@ -1,5 +1,6 @@
 using final_project_server.Authentication;
 using final_project_server.Middleware;
+using final_project_server.Services;
 using final_project_server.Services.Data;
 using final_project_server.Services.Data.Repositories.Interfaces;
 using final_project_server.Services.Data.Repositories.Policies;
@@ -23,7 +24,7 @@ namespace final_project_server
             builder.Configuration.AddUserSecrets<Program>();
 
             // Configure JwtConfig options
-            builder.Services.Configure<JwtPOCO>(builder.Configuration.GetSection("Jwt"));
+            builder.Services.AddSingleton<KeyVaultService>();
 
             // Register AuthService as a singleton
             builder.Services.AddSingleton<JwtHelper>();
@@ -50,7 +51,7 @@ namespace final_project_server
             {
                 options.AddPolicy("myCorsPolicy", policy =>
                 {
-                    policy.WithOrigins("http://localhost:3000", "https://final-for-course.onrender.com")
+                    policy.WithOrigins("https://final-for-course.onrender.com", "https://*.final-for-course.onrender.com")
                     .AllowAnyMethod()
                     .AllowAnyHeader();
                 });
@@ -63,7 +64,7 @@ namespace final_project_server
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["KeyVault:VaultUri"])),
                     ValidIssuer = "PetitionBackEnd",
                     ValidAudience = "PetitionFrontEnd"
                 };

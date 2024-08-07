@@ -10,20 +10,13 @@ namespace final_project_server.Authentication
 
     public class JwtHelper
     {
-        private static string _jwtKey;
-
-        public JwtHelper(IOptions<JwtPOCO> jwtConfig)
+        public static string GenerateAuthToken(UserSQL user,string key)
         {
-            _jwtKey = jwtConfig.Value.Key;
-        }
-
-        public static string GenerateAuthToken(UserSQL user)
-        {
-            if (string.IsNullOrEmpty(_jwtKey))
+            if (string.IsNullOrEmpty(key))
             {
                 throw new InvalidOperationException("JWT key is not initialized.");
             }
-            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var tokenClaims = new Claim[]
