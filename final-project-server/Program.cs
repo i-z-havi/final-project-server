@@ -17,14 +17,17 @@ namespace final_project_server
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Configuration.AddUserSecrets<Program>();
 
             // Configure JwtConfig options
-            builder.Services.AddSingleton<KeyVaultService>();
+            var vault = new KeyVaultService(builder.Configuration);
+            builder.Services.AddSingleton(vault);
+            string key = await vault.GetSecretAsync("JwtKey");
+            string connection = await vault.GetSecretAsync("ConnectionString");
 
             // Register AuthService as a singleton
             builder.Services.AddSingleton<JwtHelper>();
@@ -37,7 +40,7 @@ namespace final_project_server
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+                options.UseSqlServer(connection)
             );
 
             builder.Services.AddControllers().AddJsonOptions(x =>
@@ -64,7 +67,7 @@ namespace final_project_server
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["KeyVault:VaultUri"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
                     ValidIssuer = "PetitionBackEnd",
                     ValidAudience = "PetitionFrontEnd"
                 };
