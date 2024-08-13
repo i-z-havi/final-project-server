@@ -27,7 +27,7 @@ namespace final_project_server
             var vault = new KeyVaultService(builder.Configuration);
             builder.Services.AddSingleton(vault);
             string key = await vault.GetSecretAsync("JwtKey");
-            string connection = await vault.GetSecretAsync("ConnectionString");
+            string connection = await vault.GetSecretAsync("ActualConnectionString");
 
             // Register AuthService as a singleton
             builder.Services.AddSingleton<JwtHelper>();

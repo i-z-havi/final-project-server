@@ -135,7 +135,7 @@ namespace final_project_server.Controllers
             string userid = HttpContext.User.FindFirstValue("id") ?? "";
             bool isAdmin = ("true" == HttpContext.User.FindFirstValue("isAdmin"));
             ProjectPolicyNormalized checkOwner = await _policiesService.GetPolicyAsync(id);
-            if (isAdmin || userid == checkOwner.CreatorId)
+            if (isAdmin || (userid == checkOwner.CreatorId))
             {
                 try
                 {
